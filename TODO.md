@@ -3,14 +3,14 @@
 - [ ] Implement PersistentExpenseManager.java
 
 ## data
-- [ ] Create DBHelper.java
+- [x] Create DBHelper.java
 - [ ] implement DBHelper.java
 
 ### impl
 - [x] Create PersistentAccountDAO.java
 - [ ] implement PersistentAccountDAO.java
 - [x] Create PersistentTransactionDAO.java
-- [ ] implement PersistentTransactionDAO.java
+- [x] implement PersistentTransactionDAO.java
 
 ## ExpenseManager.java
 - [ ] Implement setup() method
