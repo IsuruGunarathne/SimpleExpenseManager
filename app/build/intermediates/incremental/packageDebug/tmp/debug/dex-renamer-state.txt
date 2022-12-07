@@ -1,0 +1,4 @@
+#Wed Dec 07 12:08:46 IST 2022
+base.0=C\:\\Users\\Isuru Gunarathne\\OneDrive - University of Moratuwa\\Coding_Semester_3\\Database\\SimpleExpenseManager\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
