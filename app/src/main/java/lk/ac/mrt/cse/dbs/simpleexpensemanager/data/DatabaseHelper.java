@@ -120,4 +120,91 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return transactionsList;
         }
     }
+
+    public List<String> getAccountNumberList(){
+        List<String> accountNumberList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {"accountNumber"};
+        Cursor cursor = db.query("account",columns,null,null,null,null,null);
+
+        while(cursor.moveToNext()){
+            String accountNumber = cursor.getString(cursor.getColumnIndexOrThrow("accountNumber"));
+            accountNumberList.add(accountNumber);
+        }
+        cursor.close();
+        return accountNumberList;
+    }
+
+    public List<Account> getAccountsList(){
+        List<Account> accountsList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {"accountNumber","bankName","accountHolderName","balance"};
+        Cursor cursor = db.query("account",columns,null,null,null,null,null);
+
+        while(cursor.moveToNext()){
+            String accountNumber = cursor.getString(cursor.getColumnIndexOrThrow("accountNumber"));
+            String bankName = cursor.getString(cursor.getColumnIndexOrThrow("bankName"));
+            String accountHolderName = cursor.getString(cursor.getColumnIndexOrThrow("accountHolderName"));
+            double balance = cursor.getDouble(cursor.getColumnIndexOrThrow("balance"));
+
+            Account account = new Account(accountNumber,bankName,accountHolderName,balance);
+            accountsList.add(account);
+        }
+        cursor.close();
+        return accountsList;
+    }
+
+    public Account getAccount(String accountNumber){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {"accountNumber","bankName","accountHolderName","balance"};
+        String selection = "accountNumber = ?";
+        String[] selectionArgs = {accountNumber};
+        Cursor cursor = db.query("account",columns,selection,selectionArgs,null,null,null);
+
+        Account account = null;
+        while(cursor.moveToNext()){
+            String bankName = cursor.getString(cursor.getColumnIndexOrThrow("bankName"));
+            String accountHolderName = cursor.getString(cursor.getColumnIndexOrThrow("accountHolderName"));
+            double balance = cursor.getDouble(cursor.getColumnIndexOrThrow("balance"));
+
+            account = new Account(accountNumber,bankName,accountHolderName,balance);
+        }
+        cursor.close();
+        return account;
+    }
+
+    public void insertData(Account account){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("accountNumber",account.getAccountNumber());
+        values.put("bankName",account.getBankName());
+        values.put("accountHolderName",account.getAccountHolderName());
+        values.put("balance",account.getBalance());
+
+        long newRowID = db.insert("account",null,values);
+    }
+
+    public void deleteData(String accountNumber){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = "accountNumber = ?";
+        String[] selectionArgs = {accountNumber};
+        db.delete("account",selection,selectionArgs);
+    }
+
+    public void updateBalance(String accountNumber,ExpenseType expenseType,double amount){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = "accountNumber = ?";
+        String[] selectionArgs = {accountNumber};
+        ContentValues values = new ContentValues();
+        Account account = getAccount(accountNumber);
+        double balance = account.getBalance();
+        if (expenseType.equals(ExpenseType.INCOME)){
+            balance = balance + amount;
+        }
+        else{
+            balance = balance - amount;
+        }
+        values.put("balance",balance);
+        db.update("account",values,selection,selectionArgs);
+    }
 }
