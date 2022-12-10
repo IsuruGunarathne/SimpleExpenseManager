@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Isuru Gunarathne\\OneDrive - University of Moratuwa\\Coding_Semester_3\\Database\\SimpleExpenseManager\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-w820dp-v13\\values-w820dp-v13.xml",
+            "outputFile": "lk.ac.mrt.cse.dbs.simpleexpensemanager.app-mergeDebugResources-9:/values-w820dp-v13/values-w820dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Isuru Gunarathne\\OneDrive - University of Moratuwa\\Coding_Semester_3\\Database\\SimpleExpenseManager\\app\\src\\main\\res\\values-w820dp\\dimens.xml",
+                    "source": "C:\\Users\\User\\OneDrive - University of Moratuwa\\Coding_Semester_3\\Database\\SimpleExpenseManager\\app\\src\\main\\res\\values-w820dp\\dimens.xml",
                     "from": {
                         "startLines": "20",
                         "startColumns": "4",
