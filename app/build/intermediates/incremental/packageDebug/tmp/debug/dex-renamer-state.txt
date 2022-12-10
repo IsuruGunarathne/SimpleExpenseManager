@@ -1,4 +1,4 @@
-#Sat Dec 10 09:08:24 IST 2022
+#Sat Dec 10 16:12:24 IST 2022
 base.0=C\:\\Users\\User\\OneDrive - University of Moratuwa\\Coding_Semester_3\\Database\\SimpleExpenseManager\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
