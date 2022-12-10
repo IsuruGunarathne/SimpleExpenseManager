@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
@@ -176,7 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insertData(Account account){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("accountNumber",account.getAccountNumber());
+        values.put("accountNumber",account.getAccountNo());
         values.put("bankName",account.getBankName());
         values.put("accountHolderName",account.getAccountHolderName());
         values.put("balance",account.getBalance());

@@ -1,7 +1,16 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl;
 
-public class PersistentAccountDAO implements AccountDAO{
-    private DatbaseHelper databaseHelper;
+
+import java.util.List;
+
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.DatabaseHelper;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.exception.InvalidAccountException;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
+
+public class PersistentAccountDAO implements AccountDAO {
+    private DatabaseHelper databaseHelper;
 
     public PersistentAccountDAO(DatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper;
@@ -9,7 +18,7 @@ public class PersistentAccountDAO implements AccountDAO{
 
     @Override
     public List<String> getAccountNumbersList() {
-        this.databaseHelper.getAccountNumbersList();
+        return this.databaseHelper.getAccountNumberList();
     }
 
     /***
@@ -18,17 +27,17 @@ public class PersistentAccountDAO implements AccountDAO{
      * @return - list of Account objects.
      */
     public List<Account> getAccountsList(){
-        this.databaseHelper.getAccountsList();
+        return this.databaseHelper.getAccountsList();
     }
 
     /***
      * Get the account given the account number.
      *
-     * @param accountNo as String
+     * @param accountNumber as String
      * @return - the corresponding Account
      * @throws InvalidAccountException - if the account number is invalid
      */
-    public Account getAccount(String accountNo) throws InvalidAccountException{
+    public Account getAccount(String accountNumber) throws InvalidAccountException {
         return this.databaseHelper.getAccount(accountNumber);
     }
 
@@ -38,13 +47,14 @@ public class PersistentAccountDAO implements AccountDAO{
      * @param account - the account to be added.
      */
     public void addAccount(Account account){
-        databaseHelper.insertData();
+
+        databaseHelper.insertData(account);
     }
 
     /***
      * Remove an account from the accounts collection.
      *
-     * @param accountNo - of the account to be removed.
+     * @param accountNumber - of the account to be removed.
      * @throws InvalidAccountException - if the account number is invalid
      */
     public void removeAccount(String accountNumber) throws InvalidAccountException{
@@ -58,7 +68,7 @@ public class PersistentAccountDAO implements AccountDAO{
      * The implementation has the flexibility to figure out how the updating operation is committed based on the type
      * of the transaction.
      *
-     * @param accountNo   - account number of the respective account
+     * @param accountNumber   - account number of the respective account
      * @param expenseType - the type of the transaction
      * @param amount      - amount involved
      * @throws InvalidAccountException - if the account number is invalid
