@@ -1,5 +1,6 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Date;
 
@@ -10,7 +11,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 public class PersistentTransactionDAO implements TransactionDAO {
     
-    private DatabaseHelper databaseHelper;
+    private final DatabaseHelper databaseHelper;
     // constructor
     public PersistentTransactionDAO(DatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper;
@@ -45,7 +46,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
      * @param limit - number of transactions to be returned
      * @return - a list of requested number of transactions
      */
-    public List<Transaction> getPaginatedTransactionLogs(int limit){
+    public List<Transaction> getPaginatedTransactionLogs(int limit) throws ParseException {
         return databaseHelper.getPaginatedTransactionLogs(limit);
     }
 }
