@@ -25,27 +25,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase){
-        String query = "create table account(accountNumber varchar(20) primary key, bankName varchar(50),accountHolderName varchar(50), balance double)";
-        sqLiteDatabase.execSQL(query);
-        String query2 = "create table IF NOT EXISTS Transaction(id INTEGER PRIMARY KEY AUTOINCREMENT,date varchar(50), accountNumber varchar(20), expenseType varchar(10), amount double, foreign key(accountNumber) references account(accountNumber))";
+        String query1 = "create table account(accountNumber varchar(20) primary key, bankName varchar(50),accountHolderName varchar(50), balance double)";
+        sqLiteDatabase.execSQL(query1);
+        String query2 = "create table Transactions( ID INTEGER PRIMARY KEY AUTOINCREMENT, expenseType varchar(10), amount double, accountNumber varchar(20), date varchar(50), foreign key(accountNumber) references account(accountNumber))";
         sqLiteDatabase.execSQL(query2);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase,int a, int b){
         sqLiteDatabase.execSQL("Drop table if exists account");
+        sqLiteDatabase.execSQL("Drop table if exists Transactions");
         onCreate(sqLiteDatabase);
     }
 
     public void logTransaction(Date date, String accNo, ExpenseType expType, double amount){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("accountNumber",accNo);
-        values.put("date",date.toString());
-        values.put("expenseType",expType.toString());
-        values.put("amount",amount);
+        values.put("date", date.toString());
+        values.put("accountNumber", accNo);
+        values.put("expenseType", String.valueOf(expType));
+        values.put("amount", amount);
 
-        long newRowID = db.insert("Transaction",null,values);
+        // insert row
+        db.insert("Transactions", null, values);
+        db.close();
     }
 
     public List<Transaction> getAllTransactionLogs(){
@@ -53,7 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {"date","accountNumber","expenseType","amount"};
-        Cursor cursor = db.query("Transaction",columns,null,null,null,null,null);
+        Cursor cursor = db.query("Transactions",columns,null,null,null,null,null);
 
         while(cursor.moveToNext()){
             String data = cursor.getString(cursor.getColumnIndexOrThrow("date"));
@@ -82,46 +86,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return transactionsList;
     }
 
-    public List<Transaction> getPaginatedTransactionLogs(int limit){
-        SQLiteDatabase database = this.getReadableDatabase();
+    public List<Transaction> getPaginatedTransactionLogs(int limit) throws ParseException {
 
-        long count = DatabaseUtils.queryNumEntries(database,"Transaction");
-        if (limit<=count){
-            return getAllTransactionLogs();
+        List<Transaction> transactions = new ArrayList<Transaction>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] columns = {"date","accountNumber","expenseType","amount"};
+
+        Cursor cursor = db.query("Transactions",columns,null,null,null,null,null);
+
+        int size = cursor.getCount();
+
+        while(cursor.moveToNext()) {
+            String date = cursor.getString(cursor.getColumnIndex("date"));
+            Date date1 = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy").parse(date);
+            String accountNumber = cursor.getString(cursor.getColumnIndex("accountNumber"));
+            String type = cursor.getString(cursor.getColumnIndex("expenseType"));
+            ExpenseType expenseType = ExpenseType.valueOf(type);
+            double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
+            Transaction transaction = new Transaction(date1,accountNumber,expenseType,amount);
+
+            transactions.add(transaction);
         }
-        else{
-            String[] columns = {"date","accountNumber","expenseType","amount"};
-            Cursor cursor = database.query("Transaction",columns,null,null,null,null,null);
-            List<Transaction> transactionsList = new ArrayList<>();
-            int i = 0;
 
-            while(cursor.moveToNext() && i<limit){
-                String data = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                String accountNumber = cursor.getString(cursor.getColumnIndexOrThrow("accountNumber"));
-                String expenseType = cursor.getString(cursor.getColumnIndexOrThrow("expenseType"));
-                double amount = cursor.getDouble(cursor.getColumnIndexOrThrow("amount"));
-
-                ExpenseType expType = null;
-
-                if (expenseType.equals("INCOME")){
-                    expType = ExpenseType.INCOME;
-                }
-                else{
-                    expType = ExpenseType.EXPENSE;
-                }
-                Date date = null;
-                try{
-                    date = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy").parse(data);
-                }catch(ParseException e){
-                    e.printStackTrace();
-                }
-                Transaction transaction = new Transaction(date,accountNumber,expType,amount);
-                transactionsList.add(transaction);
-                i++;
-            }
-            cursor.close();
-            return transactionsList;
+        if (size <= limit) {
+            return transactions;
         }
+
+        return transactions.subList(size - limit, size);
+
+
     }
 
     public List<String> getAccountNumberList(){
