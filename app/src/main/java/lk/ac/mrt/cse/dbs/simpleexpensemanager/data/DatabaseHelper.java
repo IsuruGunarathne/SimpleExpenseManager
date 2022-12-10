@@ -27,6 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase){
         String query = "create table account(accountNumber varchar(20) primary key, bankName varchar(50),accountHolderName varchar(50), balance double)";
         sqLiteDatabase.execSQL(query);
+        String query2 = "create table IF NOT EXISTS Transaction(id INTEGER PRIMARY KEY AUTOINCREMENT,date varchar(50), accountNumber varchar(20), expenseType varchar(10), amount double, foreign key(accountNumber) references account(accountNumber))";
+        sqLiteDatabase.execSQL(query2);
     }
 
     @Override
