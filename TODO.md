@@ -4,11 +4,11 @@
 
 ## data
 - [x] Create DBHelper.java
-- [ ] implement DBHelper.java
+- [x] implement DBHelper.java
 
 ### impl
 - [x] Create PersistentAccountDAO.java
-- [ ] implement PersistentAccountDAO.java
+- [x] implement PersistentAccountDAO.java
 - [x] Create PersistentTransactionDAO.java
 - [x] implement PersistentTransactionDAO.java
 
